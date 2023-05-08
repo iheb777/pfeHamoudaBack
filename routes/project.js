@@ -11,7 +11,7 @@ import {
     addWork,
     getWorks,
     updateMembers,
-    getAllProject, adminDeleteProject, addComment, addRating
+    getAllProject, adminDeleteProject, addComment, addRating, getComment
 } from "../controllers/project.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { localVariables } from "../middleware/auth.js";
@@ -55,4 +55,8 @@ router.delete("/admin/:id", adminDeleteProject)
 // add works to a project
 router.post("/comment/:id", addComment)
 router.post("/rate/:id", addRating)
+
+router.get("/comment/:id", getComment)
+
+
 export default router;

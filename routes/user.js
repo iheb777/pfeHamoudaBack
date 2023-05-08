@@ -17,6 +17,8 @@ import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
+router.get("/projects",verifyToken,getUserProjects);
+
 //update user
 router.put("/:id", verifyToken, update);
 
@@ -32,7 +34,6 @@ router.get("/jury", getAllJury);
 router.get("/coach", getAllCoach);
 
 //get user projects
-router.get("/projects", verifyToken, getUserProjects);
 
 //get user teams
 router.get("/teams", verifyToken, getUserTeams);
@@ -48,6 +49,7 @@ router.get("/works", verifyToken, getWorks);
 
 //get tasks of a user
 router.get("/tasks", verifyToken, getTasks);
+
 
 
 export default router;

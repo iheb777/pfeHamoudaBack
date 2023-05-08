@@ -104,11 +104,10 @@ export const getProject = async (req, res, next) => {
 };
 
 export const getAllProject = async (req, res, next) => {
-
     try {
-        const projects = await Project.find();
+        const projects = await Project.find({});
         //extract the notification from the user and send it to the client
-        console.log(projects)
+        console.log("---------------------------------------")
         res.status(200).json(projects);
     } catch (err) {
         console.log(req.user)
@@ -485,6 +484,20 @@ export const addComment = async (req, res, next) => {
         next(err);
     }
 };
+
+export const getComment = async (req, res, next) => {
+    try {
+        const projects = await Comments.find({projectId: req.params.id}).populate("userId");
+        //extract the notification from the user and send it to the client
+        console.log(projects)
+        res.status(200).json(projects);
+    } catch (err) {
+        console.log(req.user)
+        next(err);
+    }
+};
+
+
 
 export const addRating = async (req, res, next) => {
     try {

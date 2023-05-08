@@ -211,7 +211,7 @@ export const unsubscribe = async (req, res, next) => {
       await User.findByIdAndUpdate(req.params.id, {
         $inc: { subscribers: -1 },
       });
-      res.status(200).json("Unsubscription successfull.")
+      res.status(200).json("Unsubscription successfully.")
     } catch (err) {
       next(err);
     }
@@ -223,6 +223,9 @@ export const unsubscribe = async (req, res, next) => {
 //find project id from user and get it from projects collection and send it to client
 export const getUserProjects = async (req, res, next) => {
   try {
+    console.log("------------")
+
+    console.log(req.user)
     const user = await User.findById(req.user.id).populate("projects")
     const projects = []
     await Promise.all(user.projects.map(async (project) => {

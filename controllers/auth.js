@@ -41,7 +41,7 @@ export const signup = async (req, res, next) => {
         // Step 1 - Create and save the userconst salt = bcrypt.genSaltSync(10);
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
-        const newUser = new User({ ...req.body, password: hashedPassword });
+        const newUser = new User({ ...req.body, password: hashedPassword , role : "STUDENT" });
 
         newUser.save().then((user) => {
 
@@ -127,6 +127,7 @@ Welcome template
 export const generateOTP = async (req, res) => {
    // req.app.locals.OTP = await otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true, });
 
+    console.log("generer")
     req.app.locals.OTP = 111111;
 
 
@@ -212,12 +213,17 @@ export const generateOTP = async (req, res) => {
 
 export const verifyOTP = async (req, res, next) => {
     const { code } = req.query;
+    console.log(req.app.locals.OTP)
+    console.log(code)
     if (parseInt(code) === parseInt(req.app.locals.OTP)) {
+
         req.app.locals.OTP = null;
         req.app.locals.resetSession = true;
-        res.status(200).send({ message: "OTP verified" });
+       return res.status(200).send({ message: "OTP verified" });
+    }else{
+        return next(createError(201, "Wrong OTP"));
+
     }
-    return next(createError(201, "Wrong OTP"));
 }
 
 export const createResetSession = async (req, res, next) => {

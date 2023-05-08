@@ -9,6 +9,9 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import morgan from 'morgan';
 const app = express();
+import bodyParser from "body-parser";
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 dotenv.config();
 
 /** Middlewares */
