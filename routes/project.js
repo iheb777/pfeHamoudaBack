@@ -63,5 +63,6 @@ router.get("/comment/:id", getComment)
 router.post("/rate/:id", addRating)
 router.get("/rate/:id", getRate)
 
+router.get("/rate/top",getBestProject)
 
 export default router;
