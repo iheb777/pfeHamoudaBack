@@ -56,6 +56,70 @@ export const signup = async (req, res, next) => {
     }
 }
 
+
+export const signupCoach = async (req, res, next) => {
+    const { email } = req.body
+    // Check we have an email
+    if (!email) {
+        return res.status(422).send({ message: "Missing email." });
+    }
+    try {
+        // Check if the email is in use
+        const existingUser = await User.findOne({ email }).exec();
+        if (existingUser) {
+            return res.status(409).send({
+                message: "Email is already in use."
+            });
+        }
+        // Step 1 - Create and save the userconst salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+        const newUser = new User({ ...req.body, password: hashedPassword , role : "COACH" });
+
+        newUser.save().then((user) => {
+
+            // create jwt token
+            const token = jwt.sign({ id: user._id }, process.env.JWT, { expiresIn: "9999 years" });
+            res.status(200).json({ token, user });
+        }).catch((err) => {
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+export const signupJury = async (req, res, next) => {
+    const { email } = req.body
+    // Check we have an email
+    if (!email) {
+        return res.status(422).send({ message: "Missing email." });
+    }
+    try {
+        // Check if the email is in use
+        const existingUser = await User.findOne({ email }).exec();
+        if (existingUser) {
+            return res.status(409).send({
+                message: "Email is already in use."
+            });
+        }
+        // Step 1 - Create and save the userconst salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+        const newUser = new User({ ...req.body, password: hashedPassword , role : "JURY" });
+
+        newUser.save().then((user) => {
+
+            // create jwt token
+            const token = jwt.sign({ id: user._id }, process.env.JWT, { expiresIn: "9999 years" });
+            res.status(200).json({ token, user });
+        }).catch((err) => {
+            next(err);
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const signin = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });

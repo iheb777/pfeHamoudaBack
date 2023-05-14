@@ -9,14 +9,24 @@ const RateSchema = new mongoose.Schema({
         },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Users",
+            ref: "User",
             required: true,
             unique: false,
         },
-
-        value: {
+        score: {
             type: Number,
-            required: true,
+            required: false,
+            default:0
+        },
+        bcm1: {
+            type: Number,
+            required: false,
+            default: 0
+        },
+        bcm2: {
+            type: Number,
+            required: false,
+            default:0
         },
 
 

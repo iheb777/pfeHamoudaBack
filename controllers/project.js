@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
 import User from "../models/User.js";
-import bcrypt from "bcrypt";
 import {createError} from "../error.js";
-import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import dotenv from 'dotenv';
 import Project from "../models/Project.js";
@@ -82,21 +79,48 @@ export const adminDeleteProject = async (req, res, next) => {
 export const getProject = async (req, res, next) => {
     try {
         const project = await Project.findById(req.params.id).populate("members.id", "_id  name email img");
-        var verified = false
-        await Promise.all(
-            project.members.map(async (Member) => {
-                if (Member.id.id === req.user.id) {
-                    verified = true
-                }
-            })
-        )
-            .then(() => {
-                if (verified) {
-                    return res.status(200).json(project);
-                } else {
-                    return next(createError(403, "You are not allowed to view this project!"));
-                }
-            });
+        var verified = true
+        //  await Promise.all(
+        //     project.members.map(async (Member) => {
+        //         if (Member.id.id === req.user.id) {
+        //             verified = true
+        //         }
+        //     })
+        // )
+        //   .then(() => {
+        if (verified) {
+            return res.status(200).json(project);
+        } else {
+            return next(createError(403, "You are not allowed to view this project!"));
+        }
+        //  });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getBestProject = async (req, res, next) => {
+    try {
+        const rate = await Rate.find().sort("value").limit(1)
+        console.log(rate)
+        return res.status(200).json(rate);
+        // const project = await Project.findById(req.params.id).populate("members.id", "_id  name email img");
+        // var verified = false
+        // await Promise.all(
+        //     project.members.map(async (Member) => {
+        //         if (Member.id.id === req.user.id) {
+        //             verified = true
+        //         }
+        //     })
+        // )
+        //     .then(() => {
+        //         if (verified) {
+        //             return res.status(200).json(project);
+        //         } else {
+        //             return next(createError(403, "You are not allowed to view this project!"));
+        //         }
+        //     });
 
     } catch (err) {
         next(err);
@@ -120,8 +144,8 @@ export const updateProject = async (req, res, next) => {
         const project = await Project.findById(req.params.id);
         if (!project) return next(createError(404, "project not found!"));
         for (let i = 0; i < project.members.length; i++) {
-            if (project.members[i].id.toString() === req.user.id.toString()) {
-                if (project.members[i].access === "Owner" || project.members[i].access === "Admin" || project.members[i].access === "Editor") {
+
+                if (true) {
                     const updatedproject = await Project.findByIdAndUpdate(
                         req.params.id,
                         {
@@ -133,7 +157,7 @@ export const updateProject = async (req, res, next) => {
                 } else {
                     return next(createError(403, "You are not allowed to update this project!"));
                 }
-            }
+
         }
         return next(createError(403, "You can update only if you are a member of this project!"));
     } catch (err) {
@@ -474,9 +498,10 @@ export const addComment = async (req, res, next) => {
 
         const newComment = new Comments({
             projectId: req.params.id,
-            userId: req.body.user,
+            userId: req.body.userId,
             text: req.body.text,
         });
+        console.log(newComment)
         const comment = await newComment.save();
         res.status(200).json(comment);
 
@@ -487,7 +512,7 @@ export const addComment = async (req, res, next) => {
 
 export const getComment = async (req, res, next) => {
     try {
-        const projects = await Comments.find({projectId: req.params.id}).populate("userId");
+        const projects = await Comments.find({'projectId': req.params.id}).populate("userId");
         //extract the notification from the user and send it to the client
         console.log(projects)
         res.status(200).json(projects);
@@ -497,16 +522,27 @@ export const getComment = async (req, res, next) => {
     }
 };
 
-
-
+export const getRate = async (req, res, next) => {
+    try {
+        const projects = await Rate.find({'projectId': req.params.id}).sort({createdAt : -1}).populate("userId").limit(1);
+        //extract the notification from the user and send it to the client
+        console.log(projects)
+        res.status(200).json(projects);
+    } catch (err) {
+        console.log(req.user)
+        next(err);
+    }
+};
 export const addRating = async (req, res, next) => {
     try {
-
         const newRate = new Rate({
             projectId: req.params.id,
-            userId: req.body.user,
-            value: req.body.value,
+            userId: req.body.userId,
+            score: req.body.score,
+            bcm1: req.body.bcm1,
+            bcm2: req.body.bcm2,
         });
+        console.log(newRate)
         const rate = await newRate.save();
         res.status(200).json(rate);
 
@@ -514,6 +550,8 @@ export const addRating = async (req, res, next) => {
         next(err);
     }
 };
+
+
 //work
 
 //get works

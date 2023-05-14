@@ -31,12 +31,12 @@ app.all('*', (req, res, next) => {
     res.header("*", '*')
     res.header("Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' stackexchange.com");
     if (req.method === 'OPTIONS') {
-        res.send(200);
+        res.sendStatus(200);
     } else {
         next();
     }
 });
-app.use(cors());
+//app.use(cors());
 
 app.use(morgan('tiny'));
 app.disable('x-powered-by');

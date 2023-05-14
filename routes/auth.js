@@ -1,5 +1,16 @@
 import express from "express";
-import { signup,signin, logout, googleAuthSignIn, generateOTP, verifyOTP, createResetSession,findUserByEmail, resetPassword } from "../controllers/auth.js";
+import {
+    signup,
+    signin,
+    logout,
+    googleAuthSignIn,
+    generateOTP,
+    verifyOTP,
+    createResetSession,
+    findUserByEmail,
+    resetPassword,
+    signupCoach, signupJury
+} from "../controllers/auth.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { localVariables } from "../middleware/auth.js";
 
@@ -7,6 +18,9 @@ const router = express.Router();
 
 //create a user
 router.post("/signup", signup);
+router.post("/add/coach", signupCoach);
+router.post("/add/jury", signupJury);
+
 //signin
 router.post("/signin", signin);
 //logout

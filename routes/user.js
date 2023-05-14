@@ -11,9 +11,10 @@ import {
   findUserByEmail,
   getNotifications,
   getWorks,
-  getTasks, getAllStudent, getAllJury, getAllCoach
+  getTasks, getAllStudent, getAllJury, getAllCoach, adminDeleteUser
 } from "../controllers/user.js";
 import { verifyToken } from "../middleware/verifyToken.js";
+import {adminDeleteProject} from "../controllers/project.js";
 
 const router = express.Router();
 
@@ -32,6 +33,9 @@ router.get("/find",verifyToken, getUser);
 router.get("/student", getAllStudent);
 router.get("/jury", getAllJury);
 router.get("/coach", getAllCoach);
+
+
+router.delete("/admin/:id", adminDeleteUser)
 
 //get user projects
 

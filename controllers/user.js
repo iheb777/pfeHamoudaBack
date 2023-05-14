@@ -1,6 +1,7 @@
 import { createError } from "../error.js";
 import User from "../models/User.js";
 import Project from "../models/Project.js";
+
 import Teams from "../models/Teams.js";
 import Notifications from "../models/Notifications.js";
 
@@ -104,6 +105,17 @@ export const getAllCoach = async (req, res, next) => {
     next(err);
   }
 }
+
+export const adminDeleteUser = async (req, res, next) => {
+  console.log(req.params.id)
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return next(createError(404, "Project not found!"));
+    await user.delete();
+  } catch (err) {
+    next(err);
+  }
+};
 
 // get notifications of the user
 
