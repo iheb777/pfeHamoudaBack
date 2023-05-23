@@ -13,7 +13,6 @@ const CommentsSchema = new mongoose.Schema({
             required: true,
             unique: false,
         },
-
         text: {
             type: String,
             required: true,

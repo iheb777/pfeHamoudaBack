@@ -11,15 +11,13 @@ import {
     addWork,
     getWorks,
     updateMembers,
-    getAllProject, adminDeleteProject, addComment, addRating, getComment, getBestProject, getRate
+    getAllProject, adminDeleteProject, addComment, addRating, getComment, getBestProject, getRate, addChat, getChat
 } from "../controllers/project.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { localVariables } from "../middleware/auth.js";
 
 const router = express.Router();
-
-
-router.get("/top",getBestProject)
+router.get("/rate/top",getBestProject)
 
 //get all projects
 router.get("/all", getAllProject)
@@ -63,6 +61,9 @@ router.get("/comment/:id", getComment)
 router.post("/rate/:id", addRating)
 router.get("/rate/:id", getRate)
 
-router.get("/rate/top",getBestProject)
+
+router.post("/chat/:id", addChat)
+
+router.get("/chat/:id", getChat)
 
 export default router;

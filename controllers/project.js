@@ -9,6 +9,7 @@ import Notifications from "../models/Notifications.js";
 import otpGenerator from 'otp-generator';
 import Comments from "../models/Comment.js";
 import Rate from "../models/Rate.js";
+import Chat from "../models/Chat.js";
 
 
 export const addProject = async (req, res, next) => {
@@ -101,27 +102,11 @@ export const getProject = async (req, res, next) => {
 };
 
 export const getBestProject = async (req, res, next) => {
+
     try {
-        const rate = await Rate.find().sort("value").limit(1)
+        const rate = await Rate.find().sort({"score" : -1}).populate("userId").populate("projectId").limit(1)
         console.log(rate)
         return res.status(200).json(rate);
-        // const project = await Project.findById(req.params.id).populate("members.id", "_id  name email img");
-        // var verified = false
-        // await Promise.all(
-        //     project.members.map(async (Member) => {
-        //         if (Member.id.id === req.user.id) {
-        //             verified = true
-        //         }
-        //     })
-        // )
-        //     .then(() => {
-        //         if (verified) {
-        //             return res.status(200).json(project);
-        //         } else {
-        //             return next(createError(403, "You are not allowed to view this project!"));
-        //         }
-        //     });
-
     } catch (err) {
         next(err);
     }
@@ -516,6 +501,40 @@ export const getComment = async (req, res, next) => {
         //extract the notification from the user and send it to the client
         console.log(projects)
         res.status(200).json(projects);
+    } catch (err) {
+        console.log(req.user)
+        next(err);
+    }
+};
+
+
+
+export const addChat = async (req, res, next) => {
+    try {
+
+        const newChat = new Chat({
+            projectId: req.params.id,
+            userId: req.body.userId,
+            text: req.body.text,
+        });
+        console.log(newChat)
+        const comment = await newChat.save();
+        res.status(200).json(comment);
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getChat = async (req, res, next) => {
+    try {
+
+        const projects = await Chat.find({'projectId': req.params.id}).populate("userId").populate("projectId");
+        const details = await Project.findOne({"_id" : req.params.id});
+
+        //extract the notification from the user and send it to the client
+        console.log(projects)
+        res.status(200).json({"chats" : projects , "details" :details});
     } catch (err) {
         console.log(req.user)
         next(err);

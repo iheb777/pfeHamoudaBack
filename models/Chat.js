@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const RateSchema = new mongoose.Schema({
+const ChatsSchema = new mongoose.Schema({
         projectId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Project",
@@ -13,25 +13,12 @@ const RateSchema = new mongoose.Schema({
             required: true,
             unique: false,
         },
-        score: {
-            type: Number,
-            required: false,
-            default:0
+        text: {
+            type: String,
+            required: true,
         },
-        bcm1: {
-            type: Number,
-            required: false,
-            default: 0
-        },
-        bcm2: {
-            type: Number,
-            required: false,
-            default:0
-        },
-
-
     },
     {timestamps: true}
 );
 
-export default mongoose.model("Rates", RateSchema);
+export default mongoose.model("Chats", ChatsSchema);
