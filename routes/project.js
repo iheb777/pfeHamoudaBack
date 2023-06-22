@@ -11,7 +11,16 @@ import {
     addWork,
     getWorks,
     updateMembers,
-    getAllProject, adminDeleteProject, addComment, addRating, getComment, getBestProject, getRate, addChat, getChat
+    getAllProject,
+    adminDeleteProject,
+    addComment,
+    addRating,
+    getComment,
+    getBestProject,
+    getRate,
+    addChat,
+    getChat,
+    updateProjectFile
 } from "../controllers/project.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { localVariables } from "../middleware/auth.js";
@@ -32,6 +41,7 @@ router.get("/:id", getProject)
 router.delete("/:id",verifyToken, deleteProject)
 //update a project
 router.patch("/:id", verifyToken, updateProject)
+router.patch("/updateFile/:id", verifyToken, updateProjectFile)
 //update a project member
 router.patch("/member/:id", verifyToken, updateMembers)
 //remove a project member

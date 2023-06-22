@@ -150,6 +150,22 @@ export const updateProject = async (req, res, next) => {
     }
 };
 
+export const updateProjectFile = async (req, res, next) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) return next(createError(404, "project not found!"));
+          await Project.findByIdAndUpdate(
+            req.params.id,
+            {
+               file : req.body.file
+            },
+        );
+        res.status(200).json({message: "Project has been updated..."});
+     } catch (err) {
+        next(err);
+    }
+};
+
 export const updateMembers = async (req, res, next) => {
     try {
         const project = await Project.findById(req.params.id);
